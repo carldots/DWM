@@ -1,0 +1,11 @@
+--- dwm.c
++++ dwm.c
+@@ -649,6 +653,8 @@ createmon(void)
+ 	m->lt[0] = &layouts[0];
+ 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
+ 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
++	m->wfsymbol[0] = WFDEFAULT;
++	m->wfsymbol[1] = '\0';
+ 	return m;
+ }
+ 

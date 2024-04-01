@@ -1,0 +1,10 @@
+--- dwm.c
++++ dwm.c
+@@ -210,6 +210,7 @@ static void spawn(const Arg *arg);
+ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
+ static void tile(Monitor *);
++static void tagswapmon(const Arg *arg);
+ static void togglebar(const Arg *arg);
+ static void togglefloating(const Arg *arg);
+ static void toggletag(const Arg *arg);
