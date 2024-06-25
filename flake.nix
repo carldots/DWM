@@ -14,7 +14,7 @@
         overlays = [
           (final: prev: {
             dwm = prev.dwm.overrideAttrs (old: {
-              src = ./.;
+              src = ./dwm;
               buildInputs = with prev; old.buildInputs ++ [
                 xorg.libXcursor
               ];
