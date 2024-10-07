@@ -11,8 +11,10 @@ static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#d09000"; 
-/* static const char col_cyan[]        = "#005577"; */
+/* static const char col_cyan[]        = "#d09000"; */
+static const char col_cyan[]        = "#005577";
+/* static const char col_cyan[]        = "#283c56"; */
+/* static const char col_cyan[]        = "#0E4C92"; */
 /* static const char col_cyan[]        = "#ffbf00"; */
 /* static const char col_cyan[]        = "#d19f08"; */
 static const char *colors[][3]      = {
@@ -20,6 +22,19 @@ static const char *colors[][3]      = {
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
+
+
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"obsidian", "120x34", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"obsidian",      spcmd1},
+};
+
+
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -36,17 +51,26 @@ static const Rule rules[] = {
 	{ "Gimp",                NULL,       NULL,       1 << 0,            0,            0 },
 	{ "Firefox",             NULL,       NULL,       1 << 0,            0,            0 },
 	{ "Signal",              NULL,       NULL,       1 << 0,            0,            2 },
+	{ "discord",             NULL,       NULL,       1 << 0,            0,            2 },
+	{ "nheko",               NULL,       NULL,       1 << 0,            0,            2 },
 	{ "ArmCord",             NULL,       NULL,       1 << 0,            0,            2 },
+	{ "WebApp-Discord0838",  NULL,       NULL,       1 << 0,            0,            2 },
+	{ "iamb",                NULL,       NULL,       1 << 0,            0,            2 },
 	{ "SchildiChat",         NULL,       NULL,       1 << 0,            0,            2 },
 	{ "steam",               NULL,       NULL,       1 << 3,            0,            2 },
 	{ "steamwebhelper",      NULL,       NULL,       1 << 3,            0,            2 },
 	{ "steam_app_",  "steam_app_",       NULL,       1 << 3,            0,            0 },
 	{ "PrismLauncher",       NULL,       NULL,       1 << 4,            0,            2 },
+	{ "obsidian",            NULL,       NULL,       1 << 4,            0,            2 },
 	{ "Geary",               NULL,       NULL,       1 << 2,            0,            2 },
 	{ "virt-viewer",         NULL,       NULL,       1 << 3,            0,            0 }, 
 	{ "Spotify",             NULL,       NULL,       1 << 1,            0,            2 },
 	{ "electron-mail",       NULL,       NULL,       1 << 2,            0,            2 },
 	{ "qBittorrent",         NULL,       NULL,       1 << 5,            0,            2 },
+	{ "Nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
+	{ "nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
+	{ "eadesktop.exe",       NULL,       NULL,       1 << 4,            0,            2 },
+	{ NULL,		               "obsidian", NULL,		   SPTAG(0),       	  1,	         -1 },
 };
 
 static const MonitorRule monrules[] = {
@@ -83,27 +107,35 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", "-o", "font.size=15", NULL };
+/* static const char *dmenucmd[] = { "rofi", "-show", "run", NULL }; */
+/* static const char *termcmd[]  = { "alacritty", "-o", "font.size=15", NULL }; */
+static const char *termcmd[]  = { "kitty",  NULL }; 
 
+#include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
++	{ MODKEY,                  			XK_r,  	   togglescratch,  {.ui = 0 } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_v,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_z,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_u,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = -1 } },
 	{ MODKEY|ControlMask|ShiftMask, XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY|ControlMask|ShiftMask, XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_s,      zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,             XK_space,  setlayout,      {0} },
+	{ MODKEY,                       XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_h,      focusmon,       {.i = -1 } },
@@ -147,7 +179,7 @@ static const Button buttons[] = {
 	 */
 	{ ClkClientWin,         MODKEY,         Button1,        moveorplace,    {.i = 1} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
