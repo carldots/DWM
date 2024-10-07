@@ -23,6 +23,19 @@ static const char *colors[][3]      = {
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
+
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"obsidian", "120x34", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"obsidian",      spcmd1},
+};
+
+
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
@@ -57,6 +70,7 @@ static const Rule rules[] = {
 	{ "Nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
 	{ "nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
 	{ "eadesktop.exe",       NULL,       NULL,       1 << 4,            0,            2 },
+	{ NULL,		               "obsidian", NULL,		   SPTAG(0),       	  1,	         -1 },
 };
 
 static const MonitorRule monrules[] = {
@@ -100,6 +114,7 @@ static const char *termcmd[]  = { "kitty",  NULL };
 #include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
++	{ MODKEY,                  			XK_r,  	   togglescratch,  {.ui = 0 } },
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
@@ -164,7 +179,7 @@ static const Button buttons[] = {
 	 */
 	{ ClkClientWin,         MODKEY,         Button1,        moveorplace,    {.i = 1} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
