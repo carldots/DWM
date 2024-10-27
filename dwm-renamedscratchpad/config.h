@@ -11,10 +11,8 @@ static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_red[]         = "#FF0000";
-static const char col_orange[]      = "#FF8800";
-static const char col_cyan[]        = "#005577";
 /* static const char col_cyan[]        = "#d09000"; */
+static const char col_cyan[]        = "#005577";
 /* static const char col_cyan[]        = "#283c56"; */
 /* static const char col_cyan[]        = "#0E4C92"; */
 /* static const char col_cyan[]        = "#ffbf00"; */
@@ -23,8 +21,6 @@ static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-	[SchemeScratchSel]  = { col_gray4, col_cyan,  col_red  },
-	[SchemeScratchNorm] = { col_gray4, col_cyan,  col_orange },
 };
 
 /* tagging */
@@ -42,6 +38,8 @@ static const Rule rules[] = {
 	{ "Gimp",                NULL,       NULL,       1 << 0,            0,            0 },
 	{ "Firefox",             NULL,       NULL,       1 << 0,            0,            0 },
 	{ "Signal",              NULL,       NULL,       1 << 0,            0,            2 },
+	{ "discord",             NULL,       NULL,       1 << 0,            0,            2 },
+	{ "nheko",               NULL,       NULL,       1 << 0,            0,            2 },
 	{ "ArmCord",             NULL,       NULL,       1 << 0,            0,            2 },
 	{ "WebApp-Discord0838",  NULL,       NULL,       1 << 0,            0,            2 },
 	{ "iamb",                NULL,       NULL,       1 << 0,            0,            2 },
@@ -50,6 +48,7 @@ static const Rule rules[] = {
 	{ "steamwebhelper",      NULL,       NULL,       1 << 3,            0,            2 },
 	{ "steam_app_",  "steam_app_",       NULL,       1 << 3,            0,            0 },
 	{ "PrismLauncher",       NULL,       NULL,       1 << 4,            0,            2 },
+	{ "obsidian",            NULL,       NULL,       1 << 4,            0,            2 },
 	{ "Geary",               NULL,       NULL,       1 << 2,            0,            2 },
 	{ "virt-viewer",         NULL,       NULL,       1 << 3,            0,            0 }, 
 	{ "Spotify",             NULL,       NULL,       1 << 1,            0,            2 },
@@ -58,9 +57,6 @@ static const Rule rules[] = {
 	{ "Nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
 	{ "nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
 	{ "eadesktop.exe",       NULL,       NULL,       1 << 4,            0,            2 },
-	/* class      instance    title       tags mask     isfloating   monitor    scratch key */
-	{ "Pcmanfm",     NULL,       NULL,       0,            1,            1,        'r'  },
-	{ "Caja",        NULL,       NULL,       0,            1,            0,        'r'  },
 };
 
 static const MonitorRule monrules[] = {
@@ -101,20 +97,16 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 /* static const char *termcmd[]  = { "alacritty", "-o", "font.size=15", NULL }; */
 static const char *termcmd[]  = { "kitty",  NULL }; 
 
-/*First arg only serves to match against key in rules*/
-static const char *scratchpadcmd[] = {"r", "pcmanfm", NULL};
-
 #include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_r,      togglescratch,  {.v = scratchpadcmd } },
-	{ MODKEY|ShiftMask,             XK_r,      removescratch,  {.v = scratchpadcmd } },
-	{ MODKEY|ControlMask,           XK_r,      setscratch,     {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_v,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_z,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_u,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = -1 } },
 	{ MODKEY|ControlMask|ShiftMask, XK_h,      setmfact,       {.f = -0.05} },
@@ -148,9 +140,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_6,                      5)
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_w,                      5)
-	TAGKEYS(                        XK_e,                      6)
-	TAGKEYS(                        XK_r,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_e,      quit,           {0} },
 };

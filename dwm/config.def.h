@@ -57,6 +57,8 @@ static const Rule rules[] = {
 	{ "Nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
 	{ "nextcloud",           NULL,       NULL,       1 << 8,            0,            1 },
 	{ "eadesktop.exe",       NULL,       NULL,       1 << 4,            0,            2 },
+	/* class      instance    title       tags mask     isfloating   monitor    scratch key */
+	{ "Spotify",  NULL,   "scratchpad",   0,            1,           -1,       's' },
 };
 
 static const MonitorRule monrules[] = {
@@ -97,11 +99,19 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 /* static const char *termcmd[]  = { "alacritty", "-o", "font.size=15", NULL }; */
 static const char *termcmd[]  = { "kitty",  NULL }; 
 
+
+/* First arg only serves to match against key in rules*/
+static const char *scratchpadcmd[] = {"s", "spotify", NULL};
+
+
 #include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_g,      togglescratch,  {.v = scratchpadcmd } },
+	{ MODKEY|ShiftMask,             XK_g,      removescratch,  {.v = scratchpadcmd } },
+	{ MODKEY|ControlMask,           XK_g,      setscratch,     {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_v,      focusstack,     {.i = +1 } },

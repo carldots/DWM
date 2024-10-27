@@ -1,15 +1,29 @@
 --- dwm.c
 +++ dwm.c
-@@ -2245,9 +2245,9 @@ setup(void)
- 	xatom[Xembed] = XInternAtom(dpy, "_XEMBED", False);
- 	xatom[XembedInfo] = XInternAtom(dpy, "_XEMBED_INFO", False);
-     /* init cursors */
--	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
--	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
--	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
-+	cursor[CurNormal] = drw_cur_create(drw, "left_ptr");
-+	cursor[CurResize] = drw_cur_create(drw, "bottom_right_corner");
-+	cursor[CurMove] = drw_cur_create(drw, "fleur");
- 	/* init appearance */
- 	scheme = ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
- 	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], 3);
+@@ -93,6 +93,7 @@ struct Client {
+ 	int bw, oldbw;
+ 	unsigned int tags;
+ 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
++	char scratchkey;
+ 	Client *next;
+ 	Client *snext;
+ 	Monitor *mon;
+@@ -204,15 +207,18 @@ static void setfocus(Client *c);
+ static void setfullscreen(Client *c, int fullscreen);
+ static void setlayout(const Arg *arg);
+ static void setmfact(const Arg *arg);
++static void setscratch(const Arg *arg);
+ static void setup(void);
+ static void seturgent(Client *c, int urg);
+ static void showhide(Client *c);
+ static void spawn(const Arg *arg);
++static void spawnscratch(const Arg *arg);
+ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
+ static void tile(Monitor *m);
+ static void togglebar(const Arg *arg);
+ static void togglefloating(const Arg *arg);
++static void togglescratch(const Arg *arg);
+ static void toggletag(const Arg *arg);
+ static void toggleview(const Arg *arg);
+ static void unfocus(Client *c, int setfocus);
