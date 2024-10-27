@@ -34,31 +34,32 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class                 instance    title       tags mask     isfloating   monitor   scratch key */
-	{ "Gimp",                NULL,       NULL,       1 << 0,            0,            0,       0 },
-	{ "Firefox",             NULL,       NULL,       1 << 0,            0,            0,       0 },
-	{ "Signal",              NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "discord",             NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "nheko",               NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "ArmCord",             NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "WebApp-Discord0838",  NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "iamb",                NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "SchildiChat",         NULL,       NULL,       1 << 0,            0,            2,       0 },
-	{ "steam",               NULL,       NULL,       1 << 3,            0,            2,       0 },
-	{ "steamwebhelper",      NULL,       NULL,       1 << 3,            0,            2,       0 },
-	{ "steam_app_",  "steam_app_",       NULL,       1 << 3,            0,            0,       0 },
-	{ "PrismLauncher",       NULL,       NULL,       1 << 4,            0,            2,       0 },
-	{ "obsidian",            NULL,       NULL,       1 << 4,            0,            2,       0 },
-	{ "Geary",               NULL,       NULL,       1 << 2,            0,            2,       0 },
-	{ "virt-viewer",         NULL,       NULL,       1 << 3,            0,            0,       0 }, 
-//	{ "Spotify",             NULL,       NULL,       1 << 1,            0,            2,       0 },
-	{ "electron-mail",       NULL,       NULL,       1 << 2,            0,            2,       0 },
-	{ "qBittorrent",         NULL,       NULL,       1 << 5,            0,            2,       0 },
-	{ "Nextcloud",           NULL,       NULL,       1 << 8,            0,            1,       0 },
-	{ "nextcloud",           NULL,       NULL,       1 << 8,            0,            1,       0 },
-	{ "eadesktop.exe",       NULL,       NULL,       1 << 4,            0,            2,       0 },
-	/* class      instance    title       tags mask     isfloating   monitor    scratch key */
-	{ "Spotify",  NULL,      NULL,        0,            1,           -1,       's' },
+	/* class                 instance    title       tags mask   iscentered  isfloating   monitor   scratch key */
+	{ "Gimp",                NULL,       NULL,       1 << 0,     0,          0,           0,        0 },
+	{ "Firefox",             NULL,       NULL,       1 << 0,     0,          0,           0,        0 },
+	{ "Signal",              NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "discord",             NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "nheko",               NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "ArmCord",             NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "WebApp-Discord0838",  NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "iamb",                NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "SchildiChat",         NULL,       NULL,       1 << 0,     0,          0,           2,        0 },
+	{ "steam",               NULL,       NULL,       1 << 3,     0,          0,           2,        0 },
+	{ "steamwebhelper",      NULL,       NULL,       1 << 3,     0,          0,           2,        0 },
+	{ "steam_app_",  "steam_app_",       NULL,       1 << 3,     0,          0,           0,        0 },
+	{ "PrismLauncher",       NULL,       NULL,       1 << 4,     0,          0,           2,        0 },
+	{ "obsidian",            NULL,       NULL,       0,          1,          1,          -1,       'o'},
+	{ "Geary",               NULL,       NULL,       1 << 2,     0,          0,           2,        0 },
+	{ "virt-viewer",         NULL,       NULL,       1 << 3,     0,          0,           0,        0 }, 
+	{ "Spotify",             NULL,       NULL,       0,          1,          1,          -1,       's'},
+	{ "electron-mail",       NULL,       NULL,       1 << 2,     0,          0,           2,        0 },
+	{ "qBittorrent",         NULL,       NULL,       1 << 5,     0,          0,           2,        0 },
+	{ "Nextcloud",           NULL,       NULL,       1 << 8,     0,          0,           1,        0 },
+	{ "nextcloud",           NULL,       NULL,       1 << 8,     0,          0,           1,        0 },
+	{ "eadesktop.exe",       NULL,       NULL,       1 << 4,     0,          0,           2,        0 },
+  /* Backup if scratchpads does not work for me */
+//	{ "Spotify",             NULL,       NULL,       1 << 1,     0,          0,           2,        0 },
+//	{ "obsidian",            NULL,       NULL,       1 << 4,     0,          0,           2,        0 },
 };
 
 static const MonitorRule monrules[] = {
@@ -101,7 +102,8 @@ static const char *termcmd[]  = { "kitty",  NULL };
 
 
 /* First arg only serves to match against key in rules*/
-static const char *scratchpadcmd[] = {"s", "spotify", NULL};
+static const char *spotify[] = {"s", "spotify", NULL};
+static const char *obsidian[] = {"o", "obsidian", NULL};
 
 
 #include "movestack.c"
@@ -109,9 +111,12 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_g,      togglescratch,  {.v = scratchpadcmd } },
-	{ MODKEY|ShiftMask,             XK_g,      removescratch,  {.v = scratchpadcmd } },
-	{ MODKEY|ControlMask,           XK_g,      setscratch,     {.v = scratchpadcmd } },
+	{ MODKEY,                       XK_g,      togglescratch,  {.v = spotify } },
+	{ MODKEY|ShiftMask,             XK_g,      removescratch,  {.v = spotify } },
+	{ MODKEY|ControlMask,           XK_g,      setscratch,     {.v = spotify } },
+	{ MODKEY,                       XK_r,      togglescratch,  {.v = obsidian } },
+	{ MODKEY|ShiftMask,             XK_r,      removescratch,  {.v = obsidian } },
+	{ MODKEY|ControlMask,           XK_r,      setscratch,     {.v = obsidian } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_v,      focusstack,     {.i = +1 } },

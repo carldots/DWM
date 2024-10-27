@@ -1,0 +1,72 @@
+diff --git a/config.mk b/config.mk
+index 1c9d2e3..ecf7ce3 100644
+--- a/config.mk
++++ b/config.mk
+@@ -24,7 +24,7 @@ FREETYPEINC = /usr/include/freetype2
+ 
+ # includes and libs
+ INCS = -I${X11INC} -I${FREETYPEINC}
+-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lX11-xcb -lxcb -lxcb-res ${KVMLIB}
++LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lX11-xcb -lxcb -lxcb-res -lXcursor ${KVMLIB}
+ 
+ # flags
+ CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
+diff --git a/drw.c b/drw.c
+index a58a2b4..a93fcbf 100644
+--- a/drw.c
++++ b/drw.c
+@@ -4,6 +4,7 @@
+ #include <string.h>
+ #include <X11/Xlib.h>
+ #include <X11/Xft/Xft.h>
++#include <X11/Xcursor/Xcursor.h>
+ 
+ #include "drw.h"
+ #include "util.h"
+@@ -427,14 +428,14 @@ drw_font_getexts(Fnt *font, const char *text, unsigned int len, unsigned int *w,
+ }
+ 
+ Cur *
+-drw_cur_create(Drw *drw, int shape)
++drw_cur_create(Drw *drw, const char *shape)
+ {
+ 	Cur *cur;
+ 
+ 	if (!drw || !(cur = ecalloc(1, sizeof(Cur))))
+ 		return NULL;
+ 
+-	cur->cursor = XCreateFontCursor(drw->dpy, shape);
++	cur->cursor = XcursorLibraryLoadCursor(drw->dpy, shape);
+ 
+ 	return cur;
+ }
+diff --git a/drw.h b/drw.h
+index 6471431..22295a3 100644
+--- a/drw.h
++++ b/drw.h
+@@ -43,7 +43,7 @@ void drw_clr_create(Drw *drw, Clr *dest, const char *clrname);
+ Clr *drw_scm_create(Drw *drw, const char *clrnames[], size_t clrcount);
+ 
+ /* Cursor abstraction */
+-Cur *drw_cur_create(Drw *drw, int shape);
++Cur *drw_cur_create(Drw *drw, const char *shape);
+ void drw_cur_free(Drw *drw, Cur *cursor);
+ 
+ /* Drawing context manipulation */
+diff --git a/dwm.c b/dwm.c
+index d934f4c..329729e 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -2245,9 +2245,9 @@ setup(void)
+ 	xatom[Xembed] = XInternAtom(dpy, "_XEMBED", False);
+ 	xatom[XembedInfo] = XInternAtom(dpy, "_XEMBED_INFO", False);
+     /* init cursors */
+-	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
+-	cursor[CurResize] = drw_cur_create(drw, XC_sizing);
+-	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
++	cursor[CurNormal] = drw_cur_create(drw, "left_ptr");
++	cursor[CurResize] = drw_cur_create(drw, "bottom_right_corner");
++	cursor[CurMove] = drw_cur_create(drw, "fleur");
+ 	/* init appearance */
+ 	scheme = ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
+ 	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], 3);
