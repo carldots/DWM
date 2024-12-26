@@ -64,8 +64,8 @@ static const Rule rules[] = {
 
 static const MonitorRule monrules[] = {
 	/* monitor layout  mfact  nmaster  showbar  topbar */
-	{  2,      0,      -1,     0,      -1,      -1     }, // use a different layout for the second monitor
-	{  1,      0,      -1,    -1,       0,      -1     }, // use a different layout for the second monitor
+	//{  2,      0,      -1,     0,      -1,      -1     }, // use a different layout for the second monitor
+	{  1,      0,      -1,     0,       0,      -1     }, // use a different layout for the second monitor
 	{ -1,      0,      -1,    -1,       0,      -1     }, // default
 };
 
